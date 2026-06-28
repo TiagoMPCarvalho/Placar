@@ -1,0 +1,1020 @@
+/* Importação da fonte Digital 7-Segment e Outfit para textos */
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/dseg7-classic/index.css');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', Arial, sans-serif;
+    user-select: none;
+    background: #111;
+    color: white;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Container Principal para permitir rotação CSS */
+#app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+}
+
+/* FALLBACK DE ROTAÇÃO: Se o dispositivo estiver em modo Retrato (vertical),
+   nós forçamos a rotação de 90 graus para exibir o app deitado (horizontal) */
+@media (orientation: portrait) {
+    body {
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        background: #111;
+    }
+    #app-container {
+        width: 100vh;
+        height: 100vw;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(90deg);
+        transform-origin: center center;
+        overflow: hidden;
+    }
+}
+
+/* Variáveis de tamanho dinâmicas baseadas na orientação física */
+:root {
+    --score-font: 'Outfit', sans-serif;
+    --score-size: 48vh;   
+    --name-size: 4.5vh;
+    --tie-size: 50vh;     
+    --tiro-size: 4vh;
+    --bg-blue: #0055ff;
+    --bg-red: #ff2222;
+    --font-color: white;
+}
+
+@media (orientation: portrait) {
+    :root {
+        --score-size: 48vw;
+        --name-size: 4.5vw;
+        --tie-size: 50vw;
+        --tiro-size: 4vw;
+    }
+}
+
+/* --- TEMAS --- */
+
+/* Estilo Digital (7-Segmentos como o placar eletrônico clássico) */
+.theme-digital {
+    --score-font: 'DSEG7 Classic', monospace;
+    --bg-blue: #020715;  /* Preto azulado profundo */
+    --bg-red: #150202;   /* Preto avermelhado profundo */
+    --font-color: #ffffff; /* Segmentos ativos em branco brilhante */
+}
+
+.theme-digital #scoreboard {
+    background: #000000;
+    box-shadow: inset 0 0 100px rgba(0,0,0,1);
+}
+
+.theme-digital .score-card {
+    width: 85%;
+    height: 65%;
+    max-width: 360px;
+    max-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.theme-digital .team-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: var(--name-size);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.theme-digital #teamBlue .team-name {
+    color: #3388ff;
+    text-shadow: 0 0 10px rgba(0, 85, 255, 0.4);
+}
+
+.theme-digital #teamRed .team-name {
+    color: #ff3333;
+    text-shadow: 0 0 10px rgba(255, 34, 34, 0.4);
+}
+
+.theme-digital #tieDisplay {
+    background: #000000;
+}
+
+.theme-digital #tieDisplay .score-card {
+    width: 80vw;
+    height: 65vh;
+    max-width: 480px;
+    max-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (orientation: portrait) {
+    .theme-digital #tieDisplay .score-card {
+        width: 80vh;
+        height: 65vw;
+    }
+}
+
+.theme-digital .score-num {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.theme-digital .a {
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Estilo Moderno (Glassmorphism & Neon) */
+.theme-modern {
+    --score-font: 'Outfit', sans-serif;
+    --bg-blue: #081125; /* Escuro tecnológico azul */
+    --bg-red: #250808;  /* Escuro tecnológico vermelho */
+    --font-color: #ffffff;
+}
+
+.theme-modern #scoreboard {
+    background: radial-gradient(circle at center, #0e121d 0%, #05070a 100%);
+}
+
+.theme-modern .score-card {
+    width: 85%;
+    height: 65%;
+    max-width: 360px;
+    max-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.theme-modern .team-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: var(--name-size);
+    letter-spacing: 3px;
+}
+
+.theme-modern .score-num {
+    text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.theme-modern #teamBlue .score-num {
+    text-shadow: 0 0 15px rgba(0, 136, 255, 0.6), 0 0 30px rgba(0, 85, 255, 0.3);
+}
+
+.theme-modern #teamRed .score-num {
+    text-shadow: 0 0 15px rgba(255, 51, 51, 0.6), 0 0 30px rgba(255, 34, 34, 0.3);
+}
+
+.theme-modern #tieDisplay {
+    background: radial-gradient(circle at center, #0e121d 0%, #05070a 100%);
+}
+
+.theme-modern #tieDisplay .score-card {
+    width: 80vw;
+    height: 65vh;
+    max-width: 480px;
+    max-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (orientation: portrait) {
+    .theme-modern #tieDisplay .score-card {
+        width: 80vh;
+        height: 65vw;
+    }
+}
+
+.theme-modern .a {
+    color: rgba(255, 255, 255, 0.4);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* --- ESTRUTURA GERAL DAS TELAS --- */
+
+#setup, #scoreboard {
+    width: 100%;
+    height: 100%;
+}
+
+/* Tela de Configuração */
+#setup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #18181f;
+    padding: 20px;
+    font-family: 'Outfit', sans-serif;
+    overflow-y: auto;
+    position: relative;
+}
+
+#setup h1 {
+    font-size: 2.2rem;
+    margin: 0 0 25px 0;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.setup-section {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.setup-section h2 {
+    font-size: 1.3rem;
+    margin: 0 0 12px 0;
+    color: #aaa;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 95%;
+}
+
+.btn-group button {
+    padding: 15px 35px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: #2a2a35;
+    color: white;
+    border: 2px solid #444;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.btn-group button:active, .btn-group button:hover {
+    background: #ff5500;
+    border-color: #ff5500;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 85, 0, 0.3);
+}
+
+.theme-select-group {
+    display: flex;
+    gap: 20px;
+}
+
+.theme-btn {
+    padding: 12px 30px;
+    font-size: 1.3rem;
+    background: #2a2a35;
+    color: #aaa;
+    border: 2px solid #444;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.theme-btn.active {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255,255,255,0.4);
+    transform: scale(1.05);
+}
+
+/* Créditos Discretos */
+.credits {
+    position: absolute;
+    bottom: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.22);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+/* Tela do Placar */
+#scoreboard {
+    display: none;
+    flex-direction: row;
+    position: relative;
+}
+
+.team {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: relative;
+}
+
+.team-name {
+    position: absolute;
+    top: 12%;
+    text-align: center;
+    z-index: 80;
+    width: 100%;
+    pointer-events: none;
+}
+
+#teamBlue { background-color: var(--bg-blue); }
+#teamRed  { background-color: var(--bg-red); }
+
+.team:active {
+    filter: brightness(0.85);
+}
+
+.score-card-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1vh 0;
+}
+
+/* --- DISPLAY DIGITAL (COM SEGMENTOS DE FUNDO APAGADOS) --- */
+.score-num-container {
+    position: relative;
+    display: inline-block;
+}
+
+.score-num-bg {
+    font-size: var(--score-size);
+    font-family: var(--score-font);
+    color: transparent; /* Invisível por padrão em outros temas */
+    pointer-events: none;
+    user-select: none;
+    line-height: 0.95;
+    text-align: center;
+}
+
+.theme-digital .score-num-bg {
+    color: rgba(255, 255, 255, 0.035); /* Segmentos "apagados" discretos */
+}
+
+.score-num {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: var(--score-size);
+    font-family: var(--score-font);
+    color: var(--font-color);
+    font-weight: bold;
+    line-height: 0.95;
+    user-select: none;
+    text-align: center;
+}
+
+/* Banner de Fase do Jogo */
+.phase-banner {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+#phaseBannerTie {
+    position: absolute;
+    z-index: 60;
+    top: 15px;
+}
+
+.theme-digital .phase-banner {
+    background: #050508;
+    color: #00ff66; /* Verde LED clássico */
+    border: 1px solid #222;
+    font-family: 'Outfit', sans-serif;
+    text-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
+}
+
+.theme-modern .phase-banner {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Indicador do TIRO */
+.tiro-indicator {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: var(--tiro-size);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-top: 0.5vh;
+    user-select: none;
+}
+
+.tiro-indicator.active {
+    opacity: 1;
+    transform: translateY(0);
+    animation: pulse-tiro 1.2s infinite alternate;
+}
+
+@keyframes pulse-tiro {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.08); filter: brightness(1.3); }
+}
+
+.theme-digital .tiro-indicator {
+    font-family: 'Outfit', sans-serif;
+    color: #ff3333;
+    text-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
+}
+
+.theme-modern .tiro-indicator {
+    font-family: 'Outfit', sans-serif;
+    color: #ff3333;
+    text-shadow: 0 0 10px #ff2222, 0 0 20px #ff2222;
+}
+
+.theme-modern #teamBlue .tiro-indicator {
+    color: #0088ff;
+    text-shadow: 0 0 10px #0055ff, 0 0 20px #0055ff;
+}
+
+/* Tela de EMPATE */
+#tieDisplay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    flex-direction: row;
+}
+
+.tie-half {
+    flex: 1;
+    height: 100%;
+    cursor: pointer;
+    z-index: 51;
+}
+.theme-digital .tie-half:active { background: rgba(255,255,255,0.01); }
+.theme-modern .tie-half:active { background: rgba(255,255,255,0.03); }
+
+#tieDisplay .score-card-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 55;
+    margin: 0;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tieNumber {
+    font-size: var(--tie-size);
+    font-family: var(--score-font);
+    font-weight: bold;
+    line-height: 0.95;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.a {
+    font-weight: 500;
+}
+
+.theme-digital .a {
+    font-size: 1em;
+    color: #ffffff;
+}
+
+.theme-modern .a {
+    font-size: 0.7em;
+    margin-left: 0.05em;
+    color: rgba(255, 255, 255, 0.4);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* --- INDICADOR DO ÚLTIMO PONTUADOR --- */
+.scorer-indicator {
+    position: fixed;
+    bottom: 3vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scorer-indicator.active {
+    opacity: 1;
+}
+
+.indicator-arrow {
+    font-size: 24px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease;
+    color: #fff;
+}
+
+/* Seta apontando pro Azul (Esquerda) */
+.scorer-indicator.blue-last {
+    border-color: rgba(0, 85, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 85, 255, 0.2);
+    background: rgba(0, 40, 120, 0.2);
+}
+.scorer-indicator.blue-last .indicator-arrow {
+    transform: rotate(180deg) translateX(15px);
+    color: #0088ff;
+}
+
+/* Seta apontando pro Vermelho (Direita) */
+.scorer-indicator.red-last {
+    border-color: rgba(255, 34, 34, 0.4);
+    box-shadow: 0 0 15px rgba(255, 34, 34, 0.2);
+    background: rgba(120, 15, 15, 0.2);
+}
+.scorer-indicator.red-last .indicator-arrow {
+    transform: rotate(0deg) translateX(15px);
+    color: #ff3333;
+}
+
+/* --- ANIMAÇÃO DE FLIP 3D --- */
+.score-card {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.score-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ativa a animação de flip na carta inteira */
+.score-card.flipping .score-card-inner {
+    animation: flip-card-animation 0.3s ease-in-out forwards;
+}
+
+@keyframes flip-card-animation {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(-90deg);
+        filter: brightness(0.5);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+/* --- BANNER DE ANÚNCIO DE TIEBREAK (ZEROU) --- */
+.announcement-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 300;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.announcement-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.announcement-content {
+    text-align: center;
+    padding: 30px 50px;
+    border-radius: 20px;
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+.announcement-overlay.show .announcement-content {
+    transform: scale(1);
+}
+
+.theme-digital .announcement-content {
+    background: #050508;
+    border: 2px solid #222;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+
+.theme-digital .announcement-content h2 {
+    color: #ff3333;
+    font-size: 2.8rem;
+    margin: 0 0 10px 0;
+    text-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
+}
+
+.theme-digital .announcement-content p {
+    font-size: 1.3rem;
+    margin: 0;
+    color: #bbb;
+}
+
+.theme-modern .announcement-content {
+    background: rgba(10, 14, 25, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+
+.theme-modern .announcement-content h2 {
+    color: #ffaa00;
+    font-size: 3rem;
+    text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+    margin: 0 0 10px 0;
+    font-weight: 900;
+}
+
+.theme-modern .announcement-content p {
+    font-size: 1.4rem;
+    margin: 0;
+    color: #ccc;
+}
+
+/* --- BOTÕES FIXOS --- */
+#undoBtn, #fsBtn, #lockBtn {
+    position: fixed;
+    z-index: 200;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#undoBtn {
+    display: none;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+#fsBtn {
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+#lockBtn {
+    display: none;
+    top: 10px;
+    left: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+/* Estilização dos Botões Fixos por Tema */
+.theme-digital #undoBtn, .theme-digital #fsBtn, .theme-digital #lockBtn {
+    background: #0a0a0f;
+    border: 1px solid #333;
+    color: #888;
+}
+.theme-digital #undoBtn:active, .theme-digital #fsBtn:active, .theme-digital #lockBtn:active, .theme-digital #lockBtn.locked {
+    background: #222;
+    color: #fff;
+    border-color: #555;
+}
+.theme-digital #lockBtn.locked {
+    color: #ffaa00;
+}
+
+.theme-modern #undoBtn, .theme-modern #fsBtn, .theme-modern #lockBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.theme-modern #undoBtn:active, .theme-modern #fsBtn:active, .theme-modern #lockBtn:active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
+}
+.theme-modern #lockBtn.locked {
+    color: #ffaa00;
+    border-color: rgba(255, 170, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.25);
+}
+
+/* --- MODAL DE VITÓRIA --- */
+#winnerModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 250;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.winner-panel {
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 90%;
+    width: 440px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    transform: scale(0.9);
+    animation: zoom-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes zoom-in {
+    to { transform: scale(1); }
+}
+
+.winner-btn {
+    padding: 15px 35px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.theme-digital .winner-panel {
+    background: #050508;
+    border: 2px solid #222;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.theme-digital .winner-panel h1 {
+    font-size: 2.2rem;
+    margin: 0;
+    color: #ffcc00;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+}
+.theme-digital .winner-team {
+    font-size: 2.8rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.theme-digital .winner-btn {
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+.theme-digital .winner-btn:active {
+    background: #00ff66;
+    color: #000;
+    border-color: #00ff66;
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+}
+
+.theme-modern .winner-panel {
+    background: rgba(10, 14, 25, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.theme-modern .winner-panel h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: 2px;
+}
+.theme-modern .winner-team {
+    font-size: 3.2rem;
+    font-weight: 900;
+    margin: 10px 0;
+    letter-spacing: 2px;
+}
+.theme-modern .winner-btn {
+    background: linear-gradient(135deg, #0055ff, #0022aa);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 85, 255, 0.4);
+}
+.theme-modern .winner-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 85, 255, 0.2);
+}
+
+/* Tempo de jogo no Modal de Vitória */
+.winner-time {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-top: -10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.theme-digital .winner-time {
+    color: #00ff66;
+    text-shadow: 0 0 5px rgba(0, 255, 102, 0.4);
+}
+.theme-modern .winner-time {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dica de Tela Bloqueada (Cadeado) */
+.lock-hint {
+    position: fixed;
+    top: 135px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #ffaa00;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    z-index: 150;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 170, 0, 0.35);
+}
+
+.lock-hint.show {
+    opacity: 1;
+}
+
+/* --- OVERLAY DO MANUAL DE CLIQUE --- */
+.manual-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: transparent;
+    z-index: 400;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.manual-overlay.show {
+    display: flex;
+    opacity: 1;
+    pointer-events: none; /* Permite toques passarem para o placar */
+}
+
+.manual-content-wrapper {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tap-pointer {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+}
+
+.left-pointer {
+    left: 20%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.right-pointer {
+    left: 80%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tap-circle {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 170, 0, 0.6);
+    border: 2px solid #ffaa00;
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+.tap-ring {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #ffaa00;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(0.5);
+    opacity: 0;
+}
+
+/* Classes que ativam a animação de toque */
+.tap-active .tap-circle {
+    animation: tap-circle-pulse 1.2s ease-out forwards;
+}
+
+.tap-active .tap-ring {
+    animation: tap-ring-pulse 1.2s ease-out forwards;
+}
+
+@keyframes tap-circle-pulse {
+    0% { transform: scale(1); }
+    15% { transform: scale(0.7); }
+    30% { transform: scale(1); }
+    45% { transform: scale(0.7); }
+    60% { transform: scale(1); }
+    100% { transform: scale(0); }
+}
+
+@keyframes tap-ring-pulse {
+    /* Primeiro toque */
+    0% { transform: scale(0.5); opacity: 1; }
+    25% { transform: scale(1.5); opacity: 0; }
+    /* Segundo toque */
+    35% { transform: scale(0.5); opacity: 1; }
+    60% { transform: scale(1.5); opacity: 0; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
