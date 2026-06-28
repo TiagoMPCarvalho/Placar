@@ -645,9 +645,7 @@
 
     // --- BINDING DE EVENTOS DINÂMICOS (Segurança/CSP) ---
     document.addEventListener('DOMContentLoaded', () => {
-        // Seleção de Tema
-        document.getElementById('btnThemeDigital').addEventListener('click', () => setTheme('digital'));
-        document.getElementById('btnThemeModern').addEventListener('click', () => setTheme('modern'));
+
 
         // Seleção de Combinação de Cores
         document.querySelectorAll('.color-preset-btn').forEach(btn => {
