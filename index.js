@@ -28,6 +28,22 @@
     let manualInterval = null;
     let manualActive = false;
 
+    // --- CONTROLE DE COMBINAÇÃO DE CORES ---
+    let activeBlueColor = '#0000ff';
+    let activeRedColor = '#ff0000';
+    let colorPreset = 'principal';
+
+    const COLOR_PRESETS = {
+        principal: { blue: '#0000ff', red: '#ff0000' },
+        escuro:    { blue: '#0a142c', red: '#2c0a0a' }
+    };
+
+    function applyColors() {
+        const container = document.getElementById('app-container');
+        container.style.setProperty('--bg-blue', activeBlueColor);
+        container.style.setProperty('--bg-red', activeRedColor);
+    }
+
     function showLockHint() {
         const hint = document.getElementById('lockHint');
         hint.classList.add('show');
@@ -452,7 +468,7 @@
                 matchTimerInterval = null;
             }
             const blueWon = scoreA >= target;
-            showWinner(blueWon ? "AZUL" : "VERMELHO", blueWon ? "#0055ff" : "#ff2222");
+            showWinner(blueWon, blueWon ? activeBlueColor : activeRedColor);
         } else {
             if (pointHistory.length === 0 || pointHistory[pointHistory.length - 1].gameActive) {
                 gameActive = true;
@@ -513,11 +529,15 @@
         }
     }
 
-    function showWinner(teamName, color) {
+    function showWinner(blueWon, color) {
         const modal = document.getElementById('winnerModal');
         const msg = document.getElementById('winnerMessage');
         
-        msg.innerText = "TIME " + teamName;
+        if (colorPreset === 'custom') {
+            msg.innerText = blueWon ? "LADO ESQUERDO VENCEU" : "LADO DIREITO VENCEU";
+        } else {
+            msg.innerText = blueWon ? "TIME AZUL VENCEU" : "TIME VERMELHO VENCEU";
+        }
         msg.style.color = color;
         
         document.getElementById('winnerTime').innerText = "Tempo de jogo: " + currentTimerStr;
@@ -629,6 +649,43 @@
         document.getElementById('btnThemeDigital').addEventListener('click', () => setTheme('digital'));
         document.getElementById('btnThemeModern').addEventListener('click', () => setTheme('modern'));
 
+        // Seleção de Combinação de Cores
+        document.querySelectorAll('.color-preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.color-preset-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const preset = btn.getAttribute('data-preset');
+                colorPreset = preset;
+                
+                const customSelectors = document.getElementById('customColorSelectors');
+                if (preset === 'custom') {
+                    customSelectors.style.display = 'flex';
+                    activeBlueColor = document.getElementById('customColorLeft').value;
+                    activeRedColor = document.getElementById('customColorRight').value;
+                } else {
+                    customSelectors.style.display = 'none';
+                    activeBlueColor = COLOR_PRESETS[preset].blue;
+                    activeRedColor = COLOR_PRESETS[preset].red;
+                }
+                applyColors();
+            });
+        });
+
+        // Ouvintes para seletores personalizados de cores
+        document.getElementById('customColorLeft').addEventListener('input', (e) => {
+            if (colorPreset === 'custom') {
+                activeBlueColor = e.target.value;
+                applyColors();
+            }
+        });
+        document.getElementById('customColorRight').addEventListener('input', (e) => {
+            if (colorPreset === 'custom') {
+                activeRedColor = e.target.value;
+                applyColors();
+            }
+        });
+
         // Escolha de Limite de Jogo
         document.querySelectorAll('.btn-start-score').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -665,8 +722,9 @@
             resetToSetup();
         });
 
-        // Inicia com tema digital padrão
+        // Inicia com tema digital padrão e cores padrão
         setTheme('digital');
+        applyColors();
     });
 
 })();
